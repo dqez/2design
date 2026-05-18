@@ -147,7 +147,7 @@ export function DesignMdPage() {
 
         <div className="design-detail-workspace">
           <aside className="design-detail-showcase">
-            <WebsitePreviewImageSlot />
+            <WebsitePreviewImageSlot imageUrl={item.screenshotUrl} />
 
             <section className="design-detail-panel">
               <p className="section-kicker">Summary</p>

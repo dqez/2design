@@ -124,6 +124,13 @@
   font-size: 0.82rem;
 }
 
+.website-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
 .design-detail-panel {
   display: grid;
   gap: 14px;
