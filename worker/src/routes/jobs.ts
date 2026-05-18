@@ -20,6 +20,7 @@ export const jobsRoute = new Hono<{ Bindings: Env }>().get(
         tokens: { url: urls.tokens },
         designMd: { url: urls.designMd },
         brandGuide: { url: urls.brandGuide },
+        ...(urls.screenshot ? { screenshot: { url: urls.screenshot } } : {}),
       };
     }
     return c.json(response);
