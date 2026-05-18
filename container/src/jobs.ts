@@ -78,6 +78,18 @@ async function runExtractionJob(jobId: string, url: string) {
       "application/pdf",
     );
 
+    // Upload screenshot if captured — graceful degradation: failure doesn't fail the job
+    if (result.screenshotBuffer) {
+      try {
+        await uploadObject(keys.screenshot, result.screenshotBuffer, "image/png");
+      } catch (e) {
+        console.error("screenshot_upload_failed:", e);
+        keys.screenshot = "";
+      }
+    } else {
+      keys.screenshot = "";
+    }
+
     extractionJobs.set(jobId, {
       jobId,
       status: "completed",

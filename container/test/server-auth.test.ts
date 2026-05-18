@@ -8,6 +8,7 @@ vi.mock("../src/execute.js", () => ({
     tokens: `${domain}/${jobId}/tokens.json`,
     designMd: `${domain}/${jobId}/DESIGN.md`,
     brandGuide: `${domain}/${jobId}/brand-guide.pdf`,
+    screenshot: `${domain}/${jobId}/screenshot.png`,
   }),
   runDembrandt: runDembrandtMock,
 }));
@@ -82,6 +83,7 @@ describe("extractor auth", () => {
         designMd: new Uint8Array([35]),
         brandGuide: new Uint8Array([37]),
       },
+      screenshotBuffer: undefined,
     });
     await waitFor(() => expect(uploadObjectMock).toHaveBeenCalledTimes(3));
 
@@ -98,6 +100,7 @@ describe("extractor auth", () => {
         tokens: "neon.com/job_async/tokens.json",
         designMd: "neon.com/job_async/DESIGN.md",
         brandGuide: "neon.com/job_async/brand-guide.pdf",
+        screenshot: "",
       },
     });
   });

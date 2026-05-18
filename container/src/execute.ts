@@ -1,3 +1,4 @@
+import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { mkdir, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -7,6 +8,7 @@ export type OutputKeys = {
   tokens: string;
   designMd: string;
   brandGuide: string;
+  screenshot: string;
 };
 
 export function buildOutputKeys(domain: string, jobId: string): OutputKeys {
@@ -14,6 +16,7 @@ export function buildOutputKeys(domain: string, jobId: string): OutputKeys {
     tokens: `${domain}/${jobId}/tokens.json`,
     designMd: `${domain}/${jobId}/DESIGN.md`,
     brandGuide: `${domain}/${jobId}/brand-guide.pdf`,
+    screenshot: `${domain}/${jobId}/screenshot.png`,
   };
 }
 
@@ -47,6 +50,21 @@ export async function findDembrandtOutputFiles(workdir: string, domain: string) 
 export function buildWorkdir(jobId: string) {
   const prefix = process.env.WORKDIR_PREFIX ?? "opendesign";
   return join(tmpdir(), `${prefix}-${jobId}`);
+}
+
+export async function takeScreenshot(url: string): Promise<Buffer | undefined> {
+  let browser;
+  try {
+    browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15_000 });
+    return await page.screenshot();
+  } catch (e) {
+    console.error("screenshot_failed:", e);
+    return undefined;
+  } finally {
+    await browser?.close();
+  }
 }
 
 export async function runDembrandt(url: string, jobId: string) {
@@ -84,7 +102,11 @@ export async function runDembrandt(url: string, jobId: string) {
       designMd: await readFile(outputFiles.designMd),
       brandGuide: await readFile(outputFiles.brandGuide),
     };
-    return { domain, files };
+
+    // Screenshot runs BEFORE finally cleanup — uses a separate Playwright instance
+    const screenshotBuffer = await takeScreenshot(url);
+
+    return { domain, files, screenshotBuffer };
   } finally {
     await rm(workdir, { recursive: true, force: true });
   }
