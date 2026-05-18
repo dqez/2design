@@ -24,6 +24,7 @@ export const designsRoute = new Hono<{ Bindings: Env }>().get(
         if (!objectKeys.has(tokensKey)) return undefined;
 
         const brandGuideKey = `${folder}/brand-guide.pdf`;
+        const screenshotKey = `${folder}/screenshot.png`;
         const item: {
           slug: string;
           brand: string;
@@ -32,6 +33,7 @@ export const designsRoute = new Hono<{ Bindings: Env }>().get(
           designMdUrl: string;
           tokensUrl: string;
           brandGuideUrl?: string;
+          screenshotUrl?: string;
         } = {
           ...entry,
           designMdUrl: await createSignedGetUrl(c.env, key),
@@ -40,6 +42,10 @@ export const designsRoute = new Hono<{ Bindings: Env }>().get(
 
         if (objectKeys.has(brandGuideKey)) {
           item.brandGuideUrl = await createSignedGetUrl(c.env, brandGuideKey);
+        }
+        
+        if (objectKeys.has(screenshotKey)) {
+          item.screenshotUrl = await createSignedGetUrl(c.env, screenshotKey);
         }
 
         return item;

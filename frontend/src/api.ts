@@ -33,6 +33,7 @@ export type JobResponse = {
     tokens?: { url: string; size?: number };
     designMd?: { url: string; size?: number };
     brandGuide?: { url: string; size?: number };
+    screenshot?: { url: string; size?: number };
   };
   failureReason?: string;
 };
@@ -44,6 +45,7 @@ export type DesignCatalogItem = {
   designMdUrl?: string;
   tokensUrl?: string;
   brandGuideUrl?: string;
+  screenshotUrl?: string;
   updatedAt?: string;
 };
 
