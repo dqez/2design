@@ -14,6 +14,7 @@ export type R2Files = {
   tokens: string;
   designMd: string;
   brandGuide: string;
+  screenshot?: string;
 };
 
 export function buildR2ObjectUrl(input: R2ObjectUrlInput) {
@@ -50,5 +51,8 @@ export async function createSignedFileUrls(env: Env, files: R2Files) {
     tokens: await createSignedGetUrl(env, files.tokens),
     designMd: await createSignedGetUrl(env, files.designMd),
     brandGuide: await createSignedGetUrl(env, files.brandGuide),
+    ...(files.screenshot
+      ? { screenshot: await createSignedGetUrl(env, files.screenshot) }
+      : {}),
   };
 }

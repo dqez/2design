@@ -4,6 +4,7 @@ export type ContainerFiles = {
   tokens: string;
   designMd: string;
   brandGuide: string;
+  screenshot?: string;
 };
 
 export type ContainerExtractionStatus =
